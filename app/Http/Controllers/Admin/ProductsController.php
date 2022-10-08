@@ -107,6 +107,7 @@ class ProductsController extends Controller
     public function update(Request $request, $id)
     {
         $categories = Categories::all();
+        dd($categories);
         $data_brands = Brands::all();
         $validator = Validator::make($request->all(), [
             'nameproducts' => 'required|regex:/^([A-Za-z0-9]+)(\s[A-Za-z0-9]+)*$/',
