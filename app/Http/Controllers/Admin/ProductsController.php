@@ -107,7 +107,9 @@ class ProductsController extends Controller
     public function update(Request $request, $id)
     {
         $categories = Categories::all();
+        dd($categories);
         $data_brands = Brands::all();
+        dd($data_brands);
         $validator = Validator::make($request->all(), [
             'nameproducts' => 'required|regex:/^([A-Za-z0-9]+)(\s[A-Za-z0-9]+)*$/',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
