@@ -117,8 +117,8 @@ class ProductsController extends Controller
         if ($validator->fails()) {
             return response()->json(["validator" => $validator->errors(), "code" => 422]);
         }
-        $products = new Product;
-        $products->name = $request-> input('nameproducts');
+        
+       
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $extention = $file ->getClientOriginalExtension();
@@ -126,7 +126,7 @@ class ProductsController extends Controller
             $file->move('storage/images/',$filename);
         } 
         $dataPrepairUpdate = ['name'=> $request->input('nameproducts'),
-                                'image' =>'images/' . $filename,
+                                'image' => $filename,
                                 'price' => $request->input('price'),
                                 'id_cate' => $request->input('id_cate'),
                                 'id_brand' => $request->input('id_brand')
