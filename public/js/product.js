@@ -5,21 +5,22 @@
             $('.edit').on('click', function () {
         
                 var id = $(this).attr('data-id');
-                console.log(id);
-        
+               
                 $('#ProductEditModal').modal('show');
-                var image_src = ($('.image-table').attr('src'));
+                
                 var tr = $(this).closest('tr');
                 var data = tr.children("td").map(function () {
                     return $(this).text();
                 }).get();
                 console.log(data);
+                var image_id = data[0];
+                var image_src = $('#image-resource-'+image_id).attr('src');      
+                console.log(image_src);
                 $('#name1').val(data[1]);
-                $('#url').attr("src", image_src);;
+                $('.image-url').attr("src",image_src);
                 $('#price1').val(data[3]);
                 $('#id_cate1').val(data[4]);
                 $('#id_brand1').val(data[5]);
-        
                 $('#edit-product-form').on('submit', function (event) {
                     event.preventDefault();
                     var formData = new FormData($('form#edit-product-form')[0])

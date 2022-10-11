@@ -59,8 +59,10 @@ class ProductsController extends Controller
             $extention = $file ->getClientOriginalExtension();
             $filename = time().'.'.$extention;
             $file->move('storage/images/',$filename);
-            $products->image =  'images/' . $filename;
+            $products->image = $filename;
+            
         } 
+        
         // $path = $request->file('image')->store('public/images');
         // $path_image = substr($path,7);
         // $products->image = $path_image;
