@@ -24,10 +24,14 @@
                 $('#edit-product-form').on('submit', function (event) {
                     event.preventDefault();
                     var formData = new FormData($('form#edit-product-form')[0])
+                    console.log(formData);
                     $.ajax({
-                        type: "PUT",
+                        type: "POST",
                         url: "/admin/products/" + id,
                         data: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
                         processData: false,
                         contentType: false,
                         success: function (response) {
@@ -36,6 +40,7 @@
                                 $('#ProductEditModal').modal('hide');
                                 alert("Updated");
                                 window.location.reload();
+                                
                             }
                             else {
         

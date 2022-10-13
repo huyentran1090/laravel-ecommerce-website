@@ -1,8 +1,10 @@
 @extends('admin.default')
-
+@section('css')
+<link href="{{ asset('css/product-index.css') }}" rel="stylesheet">
+<meta name="csrf-token" content="{{csrf_token() }}">
+@endsection
 
 @section('content')
-<link href="{{ asset('css/product-index.css') }}" rel="stylesheet">
 <div class="row py-3 pl-3">
     <button type="button" class="btn btn-primary btn-sm add " data-toggle="modal" data-target="#ProductAddModal" >
         <span class = " fa fa-plus"></span>
@@ -141,20 +143,16 @@
                             <div class="form-group">
                                 <label for="group2">Vui lòng chọn ảnh</label>
                                 <div class="custom-file">
-                                  <input name="image" type="file" class="custom-file-input" id="imagefile2" required>
+                                  <input name="image" type="file" class="custom-file-input" id="imagefile2">
                                   <label class="custom-file-label" for="file2"></label>
                                 </div>
                                 <div id="img-preview" class=" justify-content-center position-relative mt-3">
                                     <img class="image-url rounded mx-auto d-block " src="" width="150px" height="150px"/>
-                                  
                                         <div id="remove" class="position-absolute">
                                             <button type="button" class="btn btn-default btn-sm">
                                                 <span class= fa-fa-close></span>
                                             </button>
-                                           
                                         </div>
-                                    
-
                                 </div> 
                             </div>
 
