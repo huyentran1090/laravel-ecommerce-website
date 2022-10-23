@@ -47,10 +47,13 @@ $(document).ready(function() {
     $('.add').on('click', function () {
         $('#add-category-form').on('submit',function(event) {
             event.preventDefault();
+            var formData = new FormData($('form#add-category-form')[0])
             $.ajax({
                 type: "POST",
                 url: "/admin/categories/",
-                data: $('#add-category-form').serialize(),
+                data: formData,
+                processData: false,
+                contentType: false,
                 success: function (response) {
                     if (response.code == 200) {
                         $('#CategoryAddModal').modal('hide');

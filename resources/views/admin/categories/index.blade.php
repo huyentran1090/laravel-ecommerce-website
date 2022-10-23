@@ -65,6 +65,11 @@
                         <input name="namecategory"  id="name" type="text" class="form-control"aria-describedby="nameHelp" placeholder="Tên Category">
                         <div class="namecategory errorValidate"></div>
                     </div>
+                    {{-- upload multi image --}}
+                    <div class="mb-3">
+                        <label class="form-label"> Ảnh </label>
+                        <input type="file" name="filename[]" class="form-control" multiple>
+                    </div>
                 </div>
                 <!-- Modal footer -->
                 <div class="modal-footer">
