@@ -39,6 +39,7 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->filename);
         $validator = Validator::make($request->all(), [
             'namecategory' => 'required|regex:/^([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+)$/'
         ]);
@@ -51,12 +52,13 @@ class CategoriesController extends Controller
             foreach($request->file('filename') as $image)
             {
                 $name = $image->getClientOriginalName();
+                
                 $filename = time() . $name;
                 $image->move('storage/images/',$filename);
-                $data[] = $name;  
+                $data[] =  $filename;  
             }
         }
-        // dd(json_encode($data));
+        dd(json_encode($data));
         $categories = new Categories;
         $categories->name = $request->namecategory;
         $categories->image = json_encode($data);

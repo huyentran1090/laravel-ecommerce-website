@@ -43,11 +43,35 @@ $(document).ready(function () {
 
 // JS ADD MODAL
 $(document).ready(function() {
+
+        if (input.files) {
+            var filesAmount = input.files.length;
+            $('.preview').empty();
+            
+            for (i = 0; i < filesAmount; i++) {
+                var reader = new FileReader();
     
+                reader.onload = function(event) {
+                    $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
+                }
+                
+                    reader.readAsDataURL(input.files[i]);
+                
+            };
+        };
+    
+
+
+    $('#filename').on('change', function() {
+        console.log(132);
+        previewImage(this, 'div.preview');
+    });
     $('.add').on('click', function () {
         $('#add-category-form').on('submit',function(event) {
             event.preventDefault();
+
             var formData = new FormData($('form#add-category-form')[0])
+
             $.ajax({
                 type: "POST",
                 url: "/admin/categories/",

@@ -1,5 +1,39 @@
 @extends('admin.default')
-
+@section('css')
+<style>
+    .img-wraps {
+    position: relative;
+    display: inline-block;
+    
+    font-size: 0;
+}
+.preview .img-responsive {
+    width: 100px;
+    height: 100px
+   
+    
+}
+.img-wraps .closes {
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    z-index: 100;
+    background-color: #FFF;
+    padding: 4px 3px;
+     
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    
+    text-align: center;
+    font-size:18px;
+    line-height: 10px;
+    border-radius: 50%;
+    border:1px solid black;
+    
+}
+</style>
+@endsection
 @section('content')
 <div class="row py-3 pl-3">
     <button type="button" class="btn btn-primary btn-sm add " data-toggle="modal" data-target="#CategoryAddModal" >
@@ -68,8 +102,12 @@
                     {{-- upload multi image --}}
                     <div class="mb-3">
                         <label class="form-label"> Ảnh </label>
-                        <input type="file" name="filename[]" class="form-control" multiple>
+                        <input type="file" name="filename[]" id="filename" class="form-control" multiple>
                     </div>
+                    <div class = "preview">
+
+                    </div>
+                   
                 </div>
                 <!-- Modal footer -->
                 <div class="modal-footer">
