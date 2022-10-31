@@ -43,29 +43,25 @@ $(document).ready(function () {
 
 // JS ADD MODAL
 $(document).ready(function() {
-
+    $(function() {
+        var previewImages = function(input, imgPreviewPlaceholder) {
         if (input.files) {
-            var filesAmount = input.files.length;
-            $('.preview').empty();
-            
-            for (i = 0; i < filesAmount; i++) {
-                var reader = new FileReader();
-    
-                reader.onload = function(event) {
-                    $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
-                }
-                
-                    reader.readAsDataURL(input.files[i]);
-                
-            };
+        var filesAmount = input.files.length;
+        $('.preview').empty();
+        for (i = 0; i < filesAmount; i++) {
+        var reader = new FileReader();
+        reader.onload = function(event) {
+        $($.parseHTML('<img  class=\"img-responsive\">')).attr('src', event.target.result).appendTo(imgPreviewPlaceholder);
+        }
+        reader.readAsDataURL(input.files[i]);
+        }
+        }
         };
-    
+        $('#filename').on('change', function() {
+        previewImages(this, 'div.preview');
+        });
+        });
 
-
-    $('#filename').on('change', function() {
-        console.log(132);
-        previewImage(this, 'div.preview');
-    });
     $('.add').on('click', function () {
         $('#add-category-form').on('submit',function(event) {
             event.preventDefault();
