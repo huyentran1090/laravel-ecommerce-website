@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Brands;
 use App\Models\Categories;
 use App\Models\Product;
+// use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ProductsController extends Controller
 {
@@ -59,8 +61,10 @@ class ProductsController extends Controller
             $extention = $file ->getClientOriginalExtension();
             $filename = time().'.'.$extention;
             $file->move('storage/images/',$filename);
-            $products->image =  'images/' . $filename;
+            $products->image = $filename;
+            
         } 
+        
         // $path = $request->file('image')->store('public/images');
         // $path_image = substr($path,7);
         // $products->image = $path_image;
@@ -106,29 +110,38 @@ class ProductsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $categories = Categories::all();
-        $data_brands = Brands::all();
+        $products = Product::find($id);
         $validator = Validator::make($request->all(), [
             'nameproducts' => 'required|regex:/^([A-Za-z0-9]+)(\s[A-Za-z0-9]+)*$/',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'id_cate' => [
+                'required',
+                Rule::exists('categories', 'id')->where(function ($query) {
+                    $query = $query->whereNull('deleted_at');
+                    return $query;
+                })
+            ],
         ]);
         if ($validator->fails()) {
             return response()->json(["validator" => $validator->errors(), "code" => 422]);
         }
-        $products = new Product;
-        $products->name = $request-> input('nameproducts');
+      
+       
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $extention = $file ->getClientOriginalExtension();
             $filename = time().'.'.$extention;
             $file->move('storage/images/',$filename);
         } 
+       
         $dataPrepairUpdate = ['name'=> $request->input('nameproducts'),
-                                'image' =>'images/' . $filename,
                                 'price' => $request->input('price'),
                                 'id_cate' => $request->input('id_cate'),
                                 'id_brand' => $request->input('id_brand')
                             ];
+        if (isset($filename)) {
+            $dataPrepairUpdate['image'] = $filename;
+        }
         $products = Product::where('id', $id)->update($dataPrepairUpdate);
         return response()->json(["status" => "succcess", "code" => 200]);
     }

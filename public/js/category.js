@@ -43,14 +43,37 @@ $(document).ready(function () {
 
 // JS ADD MODAL
 $(document).ready(function() {
-    
+    $(function() {
+        var previewImages = function(input, imgPreviewPlaceholder) {
+        if (input.files) {
+        var filesAmount = input.files.length;
+        $('.preview').empty();
+        for (i = 0; i < filesAmount; i++) {
+        var reader = new FileReader();
+        reader.onload = function(event) {
+        $($.parseHTML('<img  class=\"img-responsive\">')).attr('src', event.target.result).appendTo(imgPreviewPlaceholder);
+        }
+        reader.readAsDataURL(input.files[i]);
+        }
+        }
+        };
+        $('#filename').on('change', function() {
+        previewImages(this, 'div.preview');
+        });
+        });
+
     $('.add').on('click', function () {
         $('#add-category-form').on('submit',function(event) {
             event.preventDefault();
+
+            var formData = new FormData($('form#add-category-form')[0])
+
             $.ajax({
                 type: "POST",
                 url: "/admin/categories/",
-                data: $('#add-category-form').serialize(),
+                data: formData,
+                processData: false,
+                contentType: false,
                 success: function (response) {
                     if (response.code == 200) {
                         $('#CategoryAddModal').modal('hide');

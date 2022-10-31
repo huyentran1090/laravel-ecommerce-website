@@ -1,92 +1,3 @@
-// // open add modal
-// $('#edit-brand-modal').on('show.bs.modal', function (event) {
-//     var url = "";
-//     let brandId = $(event.relatedTarget).data('id');
-//     let brandName = $(event.relatedTarget).data('namebrand');
-//     $("input[name=namebrands]").val(brandName);
-
-//     $(formEdit).on('submit', function(event){
-//         event.preventDefault();
-//         // $('.errorValidate').removeClass("alert alert-danger").text('');
-//         var url = $(this).attr('data-action');
-//         url = url + "/" + brandId;
-//         // console.log("da di vao day", url);
-
-
-//         $.ajax({
-//             url: url,
-//             method: 'PUT',
-//             data: new FormData(this),
-//             dataType: 'JSON',
-//             contentType: false,
-//             cache: false,
-//             processData: false,
-//             success:function(response)
-//             {
-//                 if (response.code == 200) {
-//                     // $('.notification')
-//                     // .addClass('bg-primary text-white').text(response.status);
-//                     $(modal).modal('hide');
-//                 }
-//                 else {
-                    
-//                     $.each(response.validator, function( index, value ) {
-//                         console.log(value, index);
-//                         // $('.namebrands').addClass('alert alert-danger').text(value);
-//                         $('.' + index).addClass('alert alert-danger').text(value);
-//                     });
-//                 }
-//             },
-//             error: function(response) {
-
-//             }
-//         });
-//     });
-// })
-
-// $(document).ready(function(){
-//     var table = '#brand-table';
-//     var modal = '#add-brand-modal';
-//     var form = '#add-brand-form';
-//     $('#add-brand-form').on('submit', function(event){
-//         event.preventDefault();
-//         $('.errorValidate').removeClass("alert alert-danger").text('');
-//         var url = $(this).attr('data-action');
-
-//         $.ajax({
-//             url: url,
-//             method: 'POST',
-//             data: new FormData(this),
-//             dataType: 'JSON',
-//             contentType: false,
-//             cache: false,
-//             processData: false,
-//             success:function(response)
-//             {   
-//                 if (response.code == 200) {
-//                     // $('.notification')
-//                     // .addClass('bg-primary text-white').text(response.status);
-//                     $(modal).modal('hide');
-//                 }
-//                 else {
-                    
-//                     $.each(response.validator, function( index, value ) {
-//                         console.log(value, index);
-//                         // $('.namebrands').addClass('alert alert-danger').text(value);
-//                         $('.' + index).addClass('alert alert-danger').text(value);
-//                     });
-//                 }
-//             },
-//             error: function(response) {
-
-//             }
-//         });
-//     });
-
-    
-    
-
-// });
 
 
 // JS EDIT MODAL
@@ -136,10 +47,14 @@ $(document).ready(function() {
     $('.add').on('click', function () {
         $('#add-brands-form').on('submit',function(event) {
             event.preventDefault();
+            var formData = new FormData($('form#add-brands-form')[0])
+
             $.ajax({
                 type: "POST",
                 url: "/admin/brands/",
-                data: $('#add-brands-form').serialize(),
+                data: formData,
+                processData: false,
+                contentType: false,
                 success: function (response) {
                     if (response.code == 200) {
                         $('#BrandAddModal').modal('hide');
