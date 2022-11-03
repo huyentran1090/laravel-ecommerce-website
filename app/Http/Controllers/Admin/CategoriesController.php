@@ -55,7 +55,7 @@ class CategoriesController extends Controller
             {
                 $name = $image->getClientOriginalName();
                 
-                $filename = time() . $name;
+                $filename = rand(0, 999) . time();
                 $image->move('storage/images/',$filename);
                 $data[] =  $filename;  
             }

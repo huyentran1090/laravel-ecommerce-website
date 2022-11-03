@@ -1,5 +1,4 @@
-
-        // JS EDIT MODAL
+    // JS EDIT MODAL
 $(document).ready(function () {
 
     $('.edit').on('click', function () {
@@ -90,5 +89,21 @@ $(document).ready(function() {
                 },
             });
         });
+    });
+});
+
+$(document).on("click", ".open-modal-gallary-image", function () {
+    $('#gallery').empty();
+    let images = $(this).data('images');
+    images.forEach(element => {
+        var $newDiv = $("<div/>")   // creates a div element
+                 .addClass("col-lg-4 col-md-4 col-xs-6 p-2")   // add a class
+                 .html("<img id='test' src='http://127.0.0.1:8000/storage/images/" + element + "'>");
+
+            $("#gallery").append($newDiv);
+
+        // var img = $('<img id="test">'); //Equivalent: $(document.createElement('img'))
+        // img.attr('src', "http://127.0.0.1:8000/storage/images/" + element);
+        // img.appendTo('#gallery');
     });
 });
