@@ -164,7 +164,7 @@
     </div>
 <!-- Modal display gallery image -->
 <div class="modal fade" id="DisplayGalleryImageModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title">Toàn bộ ảnh</h4>
