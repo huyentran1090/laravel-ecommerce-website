@@ -13,6 +13,10 @@
    
     
 }
+.gallery img {
+    width: 200px;
+    height: 200px
+}
 .img-wraps .closes {
     position: absolute;
     top: 5px;
@@ -45,6 +49,7 @@
             <tr>
                 <th>#ID</th>
                 <th>Name</th>
+                <th>Image</th>
                 <th>Created_at</th>
                 <th>Updated_at</th>
                 <th>Action</th>
@@ -55,6 +60,9 @@
                 <tr>
                     <td >{{ $categories->id }}</td>
                     <td>{{ $categories->name }}</td>
+                    <td>
+                        <a class="gallery-image" href="" data-toggle="modal" data-target="#DisplayGalleryImageModal">{{count((explode(',', json_encode($categories->image,true))))}}</a>
+                    </td>
                     <td>{{ $categories->created_at }}</td>
                     <td>{{ $categories->updated_at }}</td>
                     <td>
@@ -79,6 +87,41 @@
             @endforeach
         </tbody>
     </table>
+<!-- Modal display gallery image -->
+<div class="modal fade" id="DisplayGalleryImageModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Toàn bộ ảnh</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class = "gallery d-flex flex-wrap p-2 justify-content-center">
+                @foreach ($data_categories as $categories)
+                    <?php
+                    foreach (json_decode($categories->images, true) as $images) {
+                        ?> <img src="{{ url('storage/images/'.$images) }}" alt="">
+                         <?php
+                    
+                    }
+                    
+                    ?>
+                    @foreach (  $image as $images)
+                    <img src="{{ url('storage/images/'.$images) }}" alt="">
+                    
+                    @endforeach
+                @endforeach
+              
+              
+            </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <!-- Modal ADD -->
 <div class="modal fade" id="CategoryAddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

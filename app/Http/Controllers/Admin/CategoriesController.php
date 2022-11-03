@@ -18,6 +18,7 @@ class CategoriesController extends Controller
     public function index()
     {
         $data_categories = Categories::get();
+
         return view('admin.categories.index', compact('data_categories'));
     }
 
