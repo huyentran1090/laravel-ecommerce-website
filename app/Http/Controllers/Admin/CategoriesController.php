@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Categories;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator as Validator;
 
 class CategoriesController extends Controller
@@ -40,25 +41,22 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
-        
+        // dd($request);
         $validator = Validator::make($request->all(), [
             'namecategory' => 'required|regex:/^([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+)$/'
         ]);
         if ($validator->fails()) {
             return response()->json(["validator" => $validator->errors(), "code" => 422]);
         }
-
         if($request->hasfile('filename')) {
-            $data_image = "";
-            
+            $data = [];
             foreach($request->file('filename') as $image)
             {
-                $name = $image->getClientOriginalName();
-                
                 $filename = rand(0, 999) . time();
                 $image->move('storage/images/',$filename);
                 $data[] =  $filename;  
             }
+            
         }
         // dd(json_encode($data));
         $categories = new Categories;
@@ -100,18 +98,37 @@ class CategoriesController extends Controller
      */
     public function update(Request $request, $id)
     {
-
-        $categories = Categories::find($id);
-
         $validator = Validator::make($request->all(), [
             'namecategory' => 'required|regex:/^([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+)$/',
         ]);
 
         if ($validator->fails()) {
-
             return response()->json(["validator" => $validator->errors(), "code" => 422]);
         }
-        $dataPrepairUpdate = ['name' => $request->namecategory];
+      
+        $categories = Categories::find($id);
+        if (empty($categories)) {
+            return response()->json(["status" => "fail to update", "code" => 200]);
+        }
+
+        if($request->hasfile('filename1')) {
+            //delete anh cu
+            $old_image_array = explode(",",$request->old_images);
+            Storage::delete($old_image_array);
+
+            $data_image = [];
+            
+            foreach($request->file('filename1') as $image)
+            {
+                $filename = rand(0, 999) . time();
+                $image->move('storage/images/',$filename);
+                $data_image[] =  $filename;  
+            }
+            
+        }
+        $dataPrepairUpdate = ['name' => $request->namecategory,
+                            'image' => json_encode($data_image)];
+
         $categories = Categories::where('id', $id)->update($dataPrepairUpdate);
 
         return response()->json(["status" => "succcess", "code" => 200]);

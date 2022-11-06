@@ -3,7 +3,8 @@
 <style>
 #DisplayGalleryImageModal .modal-dialog {
     min-width: 700px;
-}    
+}
+   
 .img-wraps {
     position: relative;
     display: inline-block;
@@ -14,10 +15,11 @@
     width: 100px;
     height: 100px
 }
-#gallery img {
+#gallery, #preview-edit img {
     width: 200px;
     height: 200px
 }
+
 .img-wraps .closes {
     position: absolute;
     top: 5px;
@@ -71,7 +73,7 @@
                     <td>
                         <div class="row d-flex flex-row justify-content-center">
                             <div class="col-md-2">
-                                <button type="button" class="btn btn-primary btn-sm edit" data-toggle="modal" data-target="#CategoryEditModal"  data-id="{{ $categories ->id }}" >
+                                <button type="button" class="btn btn-primary btn-sm edit" data-toggle="modal" data-target="#CategoryEditModal"  data-id="{{ $categories ->id }}" data-edit-images={{$categories->image ? $categories->image : "[]"}} >
                                     <span class= "fa fa-edit"></span>
                                 </button>
                             </div>
@@ -90,45 +92,8 @@
             @endforeach
         </tbody>
     </table>
-    <img src="" alt="">
-    <div class="modal fade" id="CategoryAddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Thêm Category</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form id="add-category-form"  method="POST" enctype="multipart/form-data" >
-                    @csrf
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label class="form-label"> Hãy điền loại mặc hàng bạn muốn thêm </label>
-                            <input name="namecategory"  id="name" type="text" class="form-control"aria-describedby="nameHelp" placeholder="Tên Category">
-                            <div class="namecategory errorValidate"></div>
-                        </div>
-                        {{-- upload multi image --}}
-                        <div class="mb-3">
-                            <label class="form-label"> Ảnh </label>
-                            <input type="file" name="filename[]" id="filename" class="form-control" multiple>
-                        </div>
-                        <div class = "preview">
-    
-                        </div>
-                       
-                    </div>
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                        <button type="submit" name="add" class="btn btn-primary">Create</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    </div>
-    
-                </form>
-            </div>
-        </div>
-    </div>
+
+    @include('admin.categories.modal.add')
     
     <!-- Modal edit -->
     <div class="modal fade" id="CategoryEditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -151,6 +116,13 @@
                             <input name="namecategory"  id="name1" type="text" class="form-control"aria-describedby="nameHelp" placeholder="Tên Category">
                             <div class="namecategory errorValidate"></div>
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label"> Ảnh </label>
+                            <input type="file" name="filename1[]" id="filename1" class="form-control" multiple>
+                        </div>
+                        <div id="preview-edit" class = " preview row d-flex flex-wrap">
+   
+                        </div>
                     </div>
                     <!-- Modal footer -->
                     <div class="modal-footer">
@@ -162,27 +134,25 @@
             </div>
         </div>
     </div>
-<!-- Modal display gallery image -->
-<div class="modal fade" id="DisplayGalleryImageModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Toàn bộ ảnh</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+
+    <!-- Modal display gallery image -->
+    <div class="modal fade" id="DisplayGalleryImageModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h4 class="modal-title">Toàn bộ ảnh</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body p-3">
+                <div id="gallery" class = "row d-flex flex-wrap"></div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
         </div>
-        <div class="modal-body p-3">
-            <div id="gallery" class = "row"></div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
-      </div>
     </div>
-</div>
-
-
-<!-- Modal ADD -->
 
     
     <script src="{{ asset('js/category.js') }}" defer></script>
