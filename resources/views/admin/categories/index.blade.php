@@ -81,7 +81,7 @@
                                 <form action="{{ url('admin/categories/'.$categories->id)}}" method="POST">
                                     @csrf
                                     @method('delete')
-                                    <button class="btn btn-primary btn-sm" >
+                                    <button type = "submit" class="btn btn-primary btn-sm" >
                                        <span class = "fa fa-trash"></span>
                                     </button>
                                 </form> 
