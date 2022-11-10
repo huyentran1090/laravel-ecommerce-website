@@ -1,4 +1,4 @@
-   // JS EDIT MODAL
+// JS EDIT MODAL
 $(document).ready(function () {
     var id;
     var old_images;
@@ -10,32 +10,30 @@ $(document).ready(function () {
         var data = tr.children("td").map(function () {
             return $(this).text();
         }).get();
-        
+
         $('#name1').val(data[1]);
         $('#preview-edit').empty();
         old_images = $(this).data('edit-images');
-        console.log(old_images);
         old_images.forEach(element => {
-            var $newDiv = $("<div/>")   // creates a div element
-                    .addClass("col-lg-4 col-md-4 col-xs-6 p-2")   // add a class
-                    .html("<img id='test' src='http://127.0.0.1:8080/storage/images/" + element + "'>");
+            var $newDiv = $("<div/>") 
+                .html("<img id='test' class=\"rounded d-block m-1\" src='http://127.0.0.1:8080/storage/images/" + element + "'>");
             $("#preview-edit").append($newDiv);
         });
-        $(function() {
-            var previewImages = function(input, imgPreviewPlaceholder) {
+        $(function () {
+            var previewImages = function (input, imgPreviewPlaceholder) {
                 if (input.files) {
                     var filesAmount = input.files.length;
                     $('#preview-edit').empty();
                     for (i = 0; i < filesAmount; i++) {
                         var reader = new FileReader();
-                        reader.onload = function(event) {
-                            $($.parseHTML('<img class=\"img-responsive\">')).attr('src', event.target.result).appendTo(imgPreviewPlaceholder);
+                        reader.onload = function (event) {
+                            $($.parseHTML('<img class=\"rounded d-block m-1\">')).attr('src', event.target.result).appendTo(imgPreviewPlaceholder);
                         }
                         reader.readAsDataURL(input.files[i]);
                     }
                 }
             };
-            $('#filename1').on('change', function() {
+            $('#filename1').on('change', function () {
                 previewImages(this, 'div#preview-edit');
             });
         });
@@ -60,10 +58,8 @@ $(document).ready(function () {
                     $('#CategoryEditModal').modal('hide');
                     alert("Updated");
                     window.location.reload();
-                    
                 }
                 else {
-
                     $.each(response.validator, function (index, value) {
                         console.log(value, index);
                         $('.' + index).addClass('alert alert-danger').text(value);
@@ -75,28 +71,28 @@ $(document).ready(function () {
 });
 
 // JS ADD MODAL
-$(document).ready(function() {
-    $(function() {
-        var previewImages = function(input, imgPreviewPlaceholder) {
+$(document).ready(function () {
+    $(function () {
+        var previewImages = function (input, imgPreviewPlaceholder) {
             if (input.files) {
                 var filesAmount = input.files.length;
                 $('.preview').empty();
                 for (i = 0; i < filesAmount; i++) {
                     var reader = new FileReader();
-                    reader.onload = function(event) {
-                        $($.parseHTML('<img class=\"img-responsive\">')).attr('src', event.target.result).appendTo(imgPreviewPlaceholder);
+                    reader.onload = function (event) {
+                        $($.parseHTML('<img class=\"img-thumbnail rounded m-1 \" style = \"width: 100px; height: 100px \">')).attr('src', event.target.result).appendTo(imgPreviewPlaceholder);
                     }
                     reader.readAsDataURL(input.files[i]);
-                }
+                }s
             }
         };
-        $('#filename').on('change', function() {
+        $('#filename').on('change', function () {
             previewImages(this, 'div.preview');
         });
     });
 
     $('.add').on('click', function () {
-        $('#add-category-form').on('submit',function(event) {
+        $('#add-category-form').on('submit', function (event) {
             event.preventDefault();
 
             var formData = new FormData($('form#add-category-form')[0])
@@ -124,18 +120,14 @@ $(document).ready(function() {
         });
     });
 });
-
+// JS display gallery images
 $(document).on("click", ".open-modal-gallary-image", function () {
     $('#gallery').empty();
     let images = $(this).data('images');
     images.forEach(element => {
-        var $newDiv = $("<div/>")   // creates a div element
-                 .addClass("col-lg-4 col-md-4 col-xs-6 p-2")   // add a class
-                 .html("<img id='test' src='http://127.0.0.1:8080/storage/images/" + element + "'>");
+        var $newDiv = $("<div/>")  
+            .addClass("col-lg-4 col-md-4 col-xs-6 p-2")  
+            .html("<img id='test' src='http://127.0.0.1:8080/storage/images/" + element + "'>");
         $("#gallery").append($newDiv);
-
-        // var img = $('<img id="test">'); //Equivalent: $(document.createElement('img'))
-        // img.attr('src', "http://127.0.0.1:8000/storage/images/" + element);
-        // img.appendTo('#gallery');
     });
 });
