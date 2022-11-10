@@ -18,7 +18,7 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $data_categories = Categories::get();
+        $data_categories = Categories::simplePaginate(5);
         return view('admin.categories.index', compact('data_categories'));
     }
 

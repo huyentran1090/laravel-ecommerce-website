@@ -69,9 +69,12 @@
                     </td>
                 </tr>
             @endforeach
+
         </tbody>
     </table>
-
+    <div class="d-flex ">
+        {!! $data_categories->links() !!}
+    </div>
     @include('admin.categories.modal.add')
     @include('admin.categories.modal.edit')
     @include('admin.categories.modal.gallery')
