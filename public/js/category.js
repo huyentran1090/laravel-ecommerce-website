@@ -83,7 +83,7 @@ $(document).ready(function () {
                         $($.parseHTML('<img class=\"img-thumbnail rounded m-1 \" style = \"width: 100px; height: 100px \">')).attr('src', event.target.result).appendTo(imgPreviewPlaceholder);
                     }
                     reader.readAsDataURL(input.files[i]);
-                }s
+                }
             }
         };
         $('#filename').on('change', function () {

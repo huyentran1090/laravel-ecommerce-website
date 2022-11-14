@@ -18,10 +18,9 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $data_categories = Categories::simplePaginate(5);
+        $data_categories = Categories::Paginate(5);
         return view('admin.categories.index', compact('data_categories'));
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -41,15 +40,24 @@ class CategoriesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'namecategory' => 'required|regex:/^([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+)$/',
-            'filename1' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         if ($validator->fails()) {
             return response()->json(["validator" => $validator->errors(), "code" => 422]);
         }
-        if ($request->hasfile('filename1')) {
+        $imageRules = array(
+            'filename' => 'required|array',
+            'filename.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048'
+        );
+        foreach($request->file('filename') as $image) {
+            $image = array('filename' => $image);
+            $imageValidator = Validator::make($image, $imageRules);
+            if ($imageValidator->fails()) {
+                $messages = $imageValidator->errors();
+             }
+        }
+        if ($request->hasfile('filename')) {
             $data = [];
-
-            foreach ($request->file('filename1') as $image) {
+            foreach ($request->file('filename') as $image) {
                 $filename = rand(0, 999) . time();
                 $image->move('storage/images/', $filename);
                 $data[] =  $filename;
@@ -94,13 +102,23 @@ class CategoriesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'namecategory' => 'required|regex:/^([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+)$/',
-            'filename1' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            // 'filename1' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if ($validator->fails()) {
             return response()->json(["validator" => $validator->errors(), "code" => 422]);
         }
-
+        $imageRules = array(
+            'filename1' => 'required|array',
+            'filename1.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048'
+        );
+        foreach($request->file('filename1') as $image) {
+            $image = array('filename1' => $image);
+            $imageValidator = Validator::make($image, $imageRules);
+            if ($imageValidator->fails()) {
+                $messages = $imageValidator->errors();
+             }
+        }
         $categories = Categories::find($id);
         if (empty($categories)) {
             return response()->json(["status" => "fail to update", "code" => 200]);

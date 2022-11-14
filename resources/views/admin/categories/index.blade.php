@@ -8,12 +8,10 @@
             width: 200px;
             height: 200px
         }
-
         #preview-edit img {
             width: 100px;
             height: 100px
-        }
-       
+        }  
     </style>
 @endsection
 @section('content')
@@ -69,12 +67,14 @@
                     </td>
                 </tr>
             @endforeach
-
         </tbody>
     </table>
-    <div class="d-flex ">
-        {!! $data_categories->links() !!}
+    <div class="container-fluid">
+        <div class="d-flex justify-content-end mr-1 my-3">
+            {!! $data_categories->links() !!}
+        </div>
     </div>
+        
     @include('admin.categories.modal.add')
     @include('admin.categories.modal.edit')
     @include('admin.categories.modal.gallery')
