@@ -1,5 +1,8 @@
 @extends('admin.default')
-
+@section('css')
+<link href="{{ asset('css/product-index.css') }}" rel="stylesheet">
+<meta name="csrf-token" content="{{csrf_token() }}">
+@endsection
 
 @section('content')
 <div class="row py-3 pl-3">
@@ -27,7 +30,7 @@
                     <td>{{ $products->id }}</td>
                     <td>{{ $products->name }}</td>
                     <td>
-                        <img class="image-table" src="{{ url('storage/'.$products->image) }}" style="height: 100px; width: 150px;">
+                        <img id="image-resource-{{$products->id}}" src="{{ url('storage/images/'.$products->image) }}"  style="height: 100px; width: 150px;">
                     </td>
                     <td>{{ $products->price }}</td>
                     <td>{{ $products->id_cate }}</td>
@@ -140,11 +143,19 @@
                             <div class="form-group">
                                 <label for="group2">Vui lòng chọn ảnh</label>
                                 <div class="custom-file">
-                                  <input name="image" type="file" class="custom-file-input" id="imagefile2" required>
+                                  <input name="image" type="file" class="custom-file-input" id="imagefile2">
                                   <label class="custom-file-label" for="file2"></label>
                                 </div>
-                                <img id="url" class="image-url" src="" alt="" style="witdh: 50px; height:50px">
+                                <div id="img-preview" class=" justify-content-center position-relative mt-3">
+                                    <img class="image-url rounded mx-auto d-block " src="" width="150px" height="150px"/>
+                                        <div id="remove" class="position-absolute">
+                                            <button type="button" class="btn btn-default btn-sm">
+                                                <span class= fa-fa-close></span>
+                                            </button>
+                                        </div>
+                                </div> 
                             </div>
+
                             <div class="form-group">
                                 <label > Giá sản phẩm</label>
                                 <input name="price" type="text" class="form-control" id="price1" placeholder="0đ">

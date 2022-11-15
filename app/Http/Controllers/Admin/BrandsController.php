@@ -46,14 +46,21 @@ class BrandsController extends Controller
             'namebrands' => 'required|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/',
         ]);
         if ($validator->fails()) {
-
             return response()->json(["validator" => $validator->errors(), "code" => 422]);
-            // return redirect('admin/brands/create')
-            //             ->withErrors($validator)
-            //             ->withInput();
+        }
+        if($request->hasfile('filename')) {
+            $data_image = "";
+            foreach($request->file('filename') as $image)
+            {
+                $name = $image->getClientOriginalName();
+                $filename = time() . $name;
+                $image->move('storage/images/',$filename);
+                $data[] = $name;  
+            }
         }
         $brands = new Brands();
         $brands->name = $request->namebrands;
+        $brands->image = json_encode($data);
         $brands->save();
         return response()->json(["status" => "succcess", "code" => 200]);
         //return redirect()->route('admin.brands.index');

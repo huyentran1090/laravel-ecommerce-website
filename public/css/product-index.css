@@ -1,0 +1,9 @@
+#img-preview {
+    display: block;
+  
+};
+#remove {
+    top: 2px;
+    right: 2px;
+    z-index: 100;
+}
