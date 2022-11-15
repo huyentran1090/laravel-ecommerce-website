@@ -1,4 +1,4 @@
-// JS EDIT MODAL
+// JS MODAL
 $(document).ready(function () {
     var id;
     var old_images;
@@ -39,6 +39,7 @@ $(document).ready(function () {
         });
     });
 
+    // when click button submit in modal edit
     $('#edit-category-form').on('submit', function (event) {
         event.preventDefault();
         var formData = new FormData($('form#edit-category-form')[0])
@@ -68,10 +69,8 @@ $(document).ready(function () {
             },
         });
     });
-});
 
-// JS ADD MODAL
-$(document).ready(function () {
+    // Preview image
     $(function () {
         var previewImages = function (input, imgPreviewPlaceholder) {
             if (input.files) {
@@ -91,43 +90,56 @@ $(document).ready(function () {
         });
     });
 
-    $('.add').on('click', function () {
-        $('#add-category-form').on('submit', function (event) {
-            event.preventDefault();
+    // when click button close in modal add
+    $('.cancel').on('click', function () {
+        console.log("da vao day");
+        $("#add-category-form")[0].reset();
+        $('#preview').empty();
+    });
 
-            var formData = new FormData($('form#add-category-form')[0])
+    // when click button submit in modal add
+    $('#add-category-form').on('submit', function (event) {
+        event.preventDefault();
 
-            $.ajax({
-                type: "POST",
-                url: "/admin/categories/",
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    if (response.code == 200) {
-                        $('#CategoryAddModal').modal('hide');
-                        alert("Created");
-                        window.location.reload();
-                    }
-                    else {
+        var formData = new FormData($('form#add-category-form')[0])
 
-                        $.each(response.validator, function (index, value) {
-                            $('.' + index).addClass('alert alert-danger').text(value);
-                        });
-                    }
-                },
-            });
+        $.ajax({
+            type: "POST",
+            url: "/admin/categories/",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.code == 200) {
+                    $('#CategoryAddModal').modal('hide');
+                    alert("Created");
+                    window.location.reload();
+                }
+                else {
+                    $.each(response.validator, function (index, value) {
+                        $('.' + index).addClass('alert alert-danger').text(value);
+                    });
+                }
+            },
+        });
+    });
+
+    // JS display gallery images
+    $(document).on("click", ".open-modal-gallary-image", function () {
+        $('#gallery').empty();
+        let images = $(this).data('images');
+        images.forEach(element => {
+            var $newDiv = $("<div/>")  
+                .addClass("col-lg-4 col-md-4 col-xs-6 p-2")  
+                .html("<img id='test' src='http://127.0.0.1:8080/storage/images/" + element + "'>");
+            $("#gallery").append($newDiv);
         });
     });
 });
-// JS display gallery images
-$(document).on("click", ".open-modal-gallary-image", function () {
-    $('#gallery').empty();
-    let images = $(this).data('images');
-    images.forEach(element => {
-        var $newDiv = $("<div/>")  
-            .addClass("col-lg-4 col-md-4 col-xs-6 p-2")  
-            .html("<img id='test' src='http://127.0.0.1:8080/storage/images/" + element + "'>");
-        $("#gallery").append($newDiv);
-    });
-});
+
+// // JS ADD MODAL
+// $(document).ready(function () {
+   
+// });
+
+

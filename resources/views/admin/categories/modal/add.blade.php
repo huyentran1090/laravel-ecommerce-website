@@ -24,13 +24,13 @@
                         <label class="form-label"> Ảnh </label>
                         <input type="file" name="filename[]" id="filename" class="form-control" multiple>
                     </div>
-                    <div class="preview d-flex flex-wrap justify-content-start px-auto">
+                    <div id="preview" class="preview d-flex flex-wrap justify-content-start px-auto">
                     </div>
                 </div>
                 <!-- Modal footer -->
                 <div class="modal-footer">
                     <button type="submit" name="add" class="btn btn-primary">Create</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger cancel" data-dismiss="modal">Close</button>
                 </div>
             </form>
         </div>

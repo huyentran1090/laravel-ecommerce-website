@@ -4,17 +4,30 @@
         #DisplayGalleryImageModal .modal-dialog {
             min-width: 700px;
         }
+
         #gallery img {
             width: 200px;
             height: 200px
         }
+
         #preview-edit img {
             width: 100px;
             height: 100px
-        }  
+        }
     </style>
 @endsection
 @section('content')
+    <form action="/admin/categories" method="GET" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+        <div class="input-group">
+            <input type="text" name="name" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search"
+                aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </form>
     <div class="row py-3 pl-3">
         <button type="button" class="btn btn-primary btn-sm add " data-toggle="modal" data-target="#CategoryAddModal">
             <span class=" fa fa-plus"></span>
@@ -70,11 +83,11 @@
         </tbody>
     </table>
     <div class="container-fluid">
-        <div class="d-flex justify-content-end mr-1 my-3">
+        <div class="d-flex justify-content-center mx-auto">
             {!! $data_categories->links() !!}
         </div>
     </div>
-        
+
     @include('admin.categories.modal.add')
     @include('admin.categories.modal.edit')
     @include('admin.categories.modal.gallery')

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Categories;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator as Validator;
 use Illuminate\Support\Facades\File;
 
@@ -16,9 +15,17 @@ class CategoriesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data_categories = Categories::Paginate(5);
+        $data_categories = Categories::select('*');
+        if ($request->name) {
+            $nameSearch = $request->name;
+            $data_categories->where(function ($query) use ($nameSearch){
+                return $query
+                    ->where('name', 'LIKE', '%'. $nameSearch .'%');
+            });
+        }        
+        $data_categories = $data_categories->paginate(5);
         return view('admin.categories.index', compact('data_categories'));
     }
     /**
@@ -40,22 +47,15 @@ class CategoriesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'namecategory' => 'required|regex:/^([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+)$/',
+            'filename' => 'required|array',
+            'filename.*' => 'bail|mimes:jpg,png,jpeg'
+        ], [
+            'filename.*.mimes' => 'The filename must be a file of type: jpg.',
         ]);
         if ($validator->fails()) {
             return response()->json(["validator" => $validator->errors(), "code" => 422]);
         }
-        $imageRules = array(
-            'filename' => 'required|array',
-            'filename.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048'
-        );
-        foreach($request->file('filename') as $image) {
-            $image = array('filename' => $image);
-            $imageValidator = Validator::make($image, $imageRules);
-            if ($imageValidator->fails()) {
-                $messages = $imageValidator->errors();
-             }
-        }
-        if ($request->hasfile('filename')) {
+        if ($request->hasFile('filename')) {
             $data = [];
             foreach ($request->file('filename') as $image) {
                 $filename = rand(0, 999) . time();
@@ -67,7 +67,7 @@ class CategoriesController extends Controller
         $categories->name = $request->namecategory;
         $categories->image = json_encode($data);
         $categories->save();
-        return response()->json(["status" => "succcess", "code" => 200]);
+        return response()->json(["status" => "success", "code" => 200]);
     }
     /**
      * Display the specified resource.
@@ -112,12 +112,12 @@ class CategoriesController extends Controller
             'filename1' => 'required|array',
             'filename1.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048'
         );
-        foreach($request->file('filename1') as $image) {
+        foreach ($request->file('filename1') as $image) {
             $image = array('filename1' => $image);
             $imageValidator = Validator::make($image, $imageRules);
             if ($imageValidator->fails()) {
                 $messages = $imageValidator->errors();
-             }
+            }
         }
         $categories = Categories::find($id);
         if (empty($categories)) {
