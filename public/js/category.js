@@ -5,7 +5,7 @@ $(document).ready(function () {
 
     $('.edit').on('click', function () {
         id = $(this).attr('data-id');
-        $('#ProductEditModal').modal('show');
+        $('#CategoryEditModal').modal('show');
         var tr = $(this).closest('tr');
         var data = tr.children("td").map(function () {
             return $(this).text();

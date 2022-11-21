@@ -1,96 +1,140 @@
+// JS MODAL
+$(document).ready(function () {
+    var id;
+    var old_images;
 
-        // JS EDIT MODAL
-        $(document).ready(function () {
-
-            $('.edit').on('click', function () {
-        
-                var id = $(this).attr('data-id');
-               
-                $('#ProductEditModal').modal('show');
-                
-                var tr = $(this).closest('tr');
-                var data = tr.children("td").map(function () {
-                    return $(this).text();
-                }).get();
-                console.log(data);
-                var image_id = data[0];
-                var image_src = $('#image-resource-'+image_id).attr('src');      
-                console.log(image_src);
-                $('#name1').val(data[1]);
-                $('.image-url').attr("src",image_src);
-                $('#price1').val(data[3]);
-                $('#id_cate1').val(data[4]);
-                $('#id_brand1').val(data[5]);
-                $('#edit-product-form').on('submit', function (event) {
-                    event.preventDefault();
-                    var formData = new FormData($('form#edit-product-form')[0])
-                    console.log(formData);
-                    $.ajax({
-                        type: "POST",
-                        url: "/admin/products/" + id,
-                        data: formData,
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        processData: false,
-                        contentType: false,
-                        success: function (response) {
-                            if (response.code == 200) {
-
-                                $('#ProductEditModal').modal('hide');
-                                alert("Updated");
-                                window.location.reload();
-                                
-                            }
-                            else {
-        
-                                $.each(response.validator, function (index, value) {
-                                    console.log(value, index);
-                                    $('.' + index).addClass('alert alert-danger').text(value);
-                                });
-                            }
-                        },
-                    });
-                });
-            });
+    $('.edit').on('click', function () {
+        id = $(this).attr('data-id');
+        $('#ProductEditModal').modal('show');
+        var tr = $(this).closest('tr');
+        var data = tr.children("td").map(function () {
+            return $(this).text();
+        }).get();
+        $('#name1').val(data[1]);
+        $('#price1').val(data[3]);
+        $('#id_cate1').val(data[4]);
+        $('#id_brand1').val(data[5]);
+        $('#preview-edit').empty();
+        old_images = $(this).data('edit-images');
+        old_images.forEach(element => {
+            var $newDiv = $("<div/>") 
+                .html("<img id='test' class=\"rounded d-block m-1\" src='http://127.0.0.1:8080/storage/images/" + element + "'>");
+            $("#preview-edit").append($newDiv);
         });
-        
-// JS ADD MODAL
-$(document).ready(function() {
-    $('.add').on('click', function () {
-        $('#add-product-form').on('submit',function(event) {
-            event.preventDefault();
-            var formData = new FormData($('form#add-product-form')[0])
-            // var data = {
-              
-            //     // files: $('#file2')[0].files[0],
-            //     // nameProduct: $('#name').val(),
-            // }
-            
-            
-
-            $.ajax({
-                type: "POST",
-                url: "/admin/products/",
-                data:formData,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    if (response.code == 200) {
-                        $('#ProductAddModal').modal('hide');
-                        alert("Created");
-                        window.location.reload();
+        $(function () {
+            var previewImages = function (input, imgPreviewPlaceholder) {
+                if (input.files) {
+                    var filesAmount = input.files.length;
+                    $('#preview-edit').empty();
+                    for (i = 0; i < filesAmount; i++) {
+                        var reader = new FileReader();
+                        reader.onload = function (event) {
+                            $($.parseHTML('<img class=\"rounded d-block m-1\">')).attr('src', event.target.result).appendTo(imgPreviewPlaceholder);
+                        }
+                        reader.readAsDataURL(input.files[i]);
                     }
-                    else {
-
-                        $.each(response.validator, function (index, value) {
-                            console.log(value, index);
-                            $('.' + index).addClass('alert alert-danger').text(value);
-                        });
-                    }
-                },
+                }
+            };
+            $('#product-image1').on('change', function () {
+                previewImages(this, 'div#preview-edit');
             });
         });
     });
+    // when click button submit in modal edit
+    $('#edit-product-form').on('submit', function (event) {
+        event.preventDefault();
+        var formData = new FormData($('form#edit-product-form')[0])
+        formData.append("old_images", old_images);
+        $.ajax({
+            type: "POST",
+            url: "/admin/products/" + id,
+            data: formData,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.code == 200) {
+
+                    $('#ProductEditModal').modal('hide');
+                    alert("Updated");
+                    window.location.reload();
+                }
+                else {
+                    $.each(response.validator, function (index, value) {
+                        console.log(value, index);
+                        $('.' + index).addClass('alert alert-danger').text(value);
+                    });
+                }
+            },
+        });
+    });
+
+    // Preview image
+    $(function () {
+        var previewImages = function (input, imgPreviewPlaceholder) {
+            if (input.files) {
+                var filesAmount = input.files.length;
+                $('.preview').empty();
+                for (i = 0; i < filesAmount; i++) {
+                    var reader = new FileReader();
+                    reader.onload = function (event) {
+                        $($.parseHTML('<img class=\"img-thumbnail rounded m-1 \" style = \"width: 100px; height: 100px \">')).attr('src', event.target.result).appendTo(imgPreviewPlaceholder);
+                    }
+                    reader.readAsDataURL(input.files[i]);
+                }
+            }
+        };
+        $('#product-image').on('change', function () {
+            previewImages(this, 'div.preview');
+        });
+    });
+
+    // when click button close in modal add
+    $('.cancel').on('click', function () {
+        $("#add-product-form")[0].reset();
+        $('#preview').empty();
+    });
+
+    // when click button submit in modal add
+    $('#add-product-form').on('submit', function (event) {
+        event.preventDefault();
+
+        var formData = new FormData($('form#add-product-form')[0])
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/products/",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.code == 200) {
+                    $('#ProductAddModal').modal('hide');
+                    alert("Created");
+                    window.location.reload();
+                }
+                else {
+                    $.each(response.validator, function (index, value) {
+                        $('.' + index).addClass('alert alert-danger').text(value);
+                    });
+                }
+            },
+        });
+    });
+
+    // JS display gallery images
+    $(document).on("click", ".open-modal-gallery-image", function () {
+        $('#gallery').empty();
+        let images = $(this).data('images');
+        images.forEach(element => {
+            var $newDiv = $("<div/>")  
+                .addClass("col-lg-4 col-md-4 col-xs-6 p-2")  
+                .html("<img id='test' src='http://127.0.0.1:8080/storage/images/" + element + "'>");
+            $("#gallery").append($newDiv);
+        });
+    });
 });
+
         
