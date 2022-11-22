@@ -27,10 +27,26 @@ class ProductsController extends Controller
         if ($request->name) {
             $nameSearch = $request->name;
             $data_products->where(function ($query) use ($nameSearch) {
-                return $query
-                    ->where('name', 'LIKE', '%' . $nameSearch . '%');
+                $query->where('name', 'LIKE', '%' . $nameSearch . '%')
+                        ->orWhere('price', '=', $nameSearch);
+                return $query;
             });
         }
+        if ($request->id_brand) {
+            $brandSearch = $request->id_brand;
+            $data_products->where(function ($query) use ($brandSearch) {
+                $query->where('id_brand', '=',$brandSearch);
+                return $query;
+            });
+        }
+        if ($request->id_cate) {
+            $cateSearch = $request->id_cate;
+            $data_products->where(function ($query) use ($cateSearch) {
+                $query->where('id_cate', '=',$cateSearch);
+                return $query;
+            });
+        }
+        
         $data_products = $data_products->paginate(5);
         return view('admin.products.index', compact('data_products', 'categories', 'brands'));
     }

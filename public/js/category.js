@@ -62,7 +62,9 @@ $(document).ready(function () {
                 }
                 else {
                     $.each(response.validator, function (index, value) {
-                        console.log(value, index);
+                        if (index.includes("filename1")) {
+                            $('.filename1').addClass('alert alert-danger').text(value);
+                        }
                         $('.' + index).addClass('alert alert-danger').text(value);
                     });
                 }
@@ -95,6 +97,7 @@ $(document).ready(function () {
         console.log("da vao day");
         $("#add-category-form")[0].reset();
         $('#preview').empty();
+        $('.errorValidate').empty();
     });
 
     // when click button submit in modal add
@@ -117,6 +120,9 @@ $(document).ready(function () {
                 }
                 else {
                     $.each(response.validator, function (index, value) {
+                        if (index.includes("filename")) {
+                            $('.filename').addClass('alert alert-danger').text(value);
+                        }
                         $('.' + index).addClass('alert alert-danger').text(value);
                     });
                 }

@@ -102,7 +102,6 @@
     @include('admin.brands.modal.add')
     @include('admin.brands.modal.edit')
     @include('admin.brands.modal.gallery')
-
     <script src="{{ asset('js/brands.js') }}" defer></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="

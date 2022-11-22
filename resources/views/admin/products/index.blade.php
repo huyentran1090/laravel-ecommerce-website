@@ -21,10 +21,10 @@
 
 @section('content')
     <div class="container-fluid d-flex py-3 pl-0">
-        <div class="col-md-10 pl-0">
+        <div class="col-md-6 pl-0 ">
             <form action="/admin/products" method="GET"
-                class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                <div class="input-group">
+                class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search d-flex">
+                <div class="input-group ">
                     <input type="text" name="name" class="form-control bg-light border-0 small"
                         placeholder="Từ khoá..." aria-label="Search" aria-describedby="basic-addon2">
                     <div class="input-group-append">
@@ -35,10 +35,46 @@
                 </div>
             </form>
         </div>
-        <div class="col-md-2 d-flex justify-content-end mr-0">
-            <button type="button" class="btn btn-primary btn-sm add " data-toggle="modal" data-target="#ProductAddModal">
-                <span class=" fa fa-plus"></span>
-            </button>
+        <div class="col-md-5">
+            <form action="/admin/products" class = "form-inline">
+                <div class="form group">
+                    <select name="id_brand" id="id_brand1" class="form-control">
+                        <option value='0'>-- Select brand --</option>
+                        @foreach ($brands as $brand)
+                            <option type="text" name="{{ $brand->id }}" value="{{ $brand->id }}">
+                                {{ $brand->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group pl-5">
+                    <select name="id_cate" id="id_cate1" class="form-control">
+                        <option value='0'>-- Select category --</option>
+                        @foreach ($categories as $category)
+                            <option type="text" name="{{ $category->id }}" value="{{ $category->id }}">
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" name="filter" class="btn btn-primary">filter</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-1 d-flex justify-content-end pr-2">
+            <div class="p-0">
+                <button type="button" class="btn btn-primary btn-sm add " data-toggle="modal" data-target="#BrandAddModal">
+                    <span class=" fa fa-plus"></span>
+                </button>
+            </div>
+            <div class="pl-2">
+                <form action="{{ url('admin/products/') }}">
+                    <button class="btn btn-primary btn-sm">
+                        <span class="fa fa-refresh"></span>
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
     <table class="table text-center">
