@@ -125,7 +125,7 @@ $(document).ready(function () {
     });
 
     // JS display gallery images
-    $(document).on("click", ".open-modal-gallary-image", function () {
+    $(document).on("click", ".open-modal-gallery-image", function () {
         $('#gallery').empty();
         let images = $(this).data('images');
         images.forEach(element => {
@@ -136,10 +136,5 @@ $(document).ready(function () {
         });
     });
 });
-
-// // JS ADD MODAL
-// $(document).ready(function () {
-   
-// });
 
 

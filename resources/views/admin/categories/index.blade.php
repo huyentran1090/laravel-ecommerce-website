@@ -50,8 +50,8 @@
                     <td>{{ $categories->id }}</td>
                     <td>{{ $categories->name }}</td>
                     <td>
-                        <a class="gallery-image open-modal-gallary-image" href="" data-toggle="modal"
-                            data-target="#DisplayGalleryImageModal"
+                        <a class="gallery-image open-modal-gallery-image" href="" data-toggle="modal"
+                            data-target="#DisplayGalleryImageModal" 
                             data-images={{ $categories->image ? $categories->image : '[]' }}>
                             {{ count(json_decode($categories->image ? $categories->image : '[]')) }}
                         </a>
@@ -66,7 +66,7 @@
                                     data-edit-images={{ $categories->image ? $categories->image : '[]' }}>
                                     <span class="fa fa-edit"></span>
                                 </button>
-                            </div>
+                            </div> 
                             <div class="col-md-2">
                                 <form action="{{ url('admin/categories/' . $categories->id) }}" method="POST">
                                     @csrf

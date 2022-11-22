@@ -26,13 +26,13 @@ class ProductsController extends Controller
         $data_products = Product::select('*');
         if ($request->name) {
             $nameSearch = $request->name;
-            $data_products->where(function ($query) use ($nameSearch){
+            $data_products->where(function ($query) use ($nameSearch) {
                 return $query
-                    ->where('name', 'LIKE', '%'. $nameSearch .'%');      
+                    ->where('name', 'LIKE', '%' . $nameSearch . '%');
             });
-        }        
+        }
         $data_products = $data_products->paginate(5);
-        return view('admin.products.index', compact('data_products','categories','brands'));
+        return view('admin.products.index', compact('data_products', 'categories', 'brands'));
     }
 
     /**
@@ -42,7 +42,6 @@ class ProductsController extends Controller
      */
     public function create()
     {
-        
     }
 
     /**
@@ -69,10 +68,10 @@ class ProductsController extends Controller
                 $filename = rand(0, 999) . time();
                 $image->move('storage/images/', $filename);
                 $data[] =  $filename;
-            }  
+            }
         }
         $products = new Product;
-        $products->name = $request-> input('nameproducts');
+        $products->name = $request->input('nameproducts');
         $products->image = json_encode($data);
         $products->price = $request->input('price');
         $products->id_cate = $request->input('id_cate');
@@ -148,9 +147,9 @@ class ProductsController extends Controller
                 $data_image[] =  $filename;
             }
             $dataPrepairUpdate = [
-                'name' => $request-> nameproducts,
+                'name' => $request->nameproducts,
                 'image' => json_encode($data_image),
-                'price' => $request-> price,
+                'price' => $request->price,
                 'id_cate' => $request->id_cate,
                 'id_brand' => $request->id_brand
             ];
@@ -158,8 +157,8 @@ class ProductsController extends Controller
             return response()->json(["status" => "success", "code" => 200]);
         } else {
             $dataPrepairUpdate = [
-                'name' => $request->namecategory,
-                'price' => $request-> price,
+                'name' => $request->nameproducts,
+                'price' => $request->price,
                 'id_cate' => $request->id_cate,
                 'id_brand' => $request->id_brand
             ];
