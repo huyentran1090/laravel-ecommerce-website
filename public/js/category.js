@@ -10,7 +10,6 @@ $(document).ready(function () {
         var data = tr.children("td").map(function () {
             return $(this).text();
         }).get();
-
         $('#name1').val(data[1]);
         $('#preview-edit').empty();
         old_images = $(this).data('edit-images');

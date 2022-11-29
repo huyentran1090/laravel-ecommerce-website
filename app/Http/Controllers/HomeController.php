@@ -16,42 +16,34 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $data = Categories::select(['categories.id', 'categories.name as cate_name', 'product.name as product_name', 'product.image', 'product.price', 'brands.name as brand_name'])
-                ->rightJoin('product', 'categories.id', '=', 'product.id_cate')
+
+        $data = Categories::select(['categories.id', 'categories.name as cate_name', 'product.name as product_name', 'product.image as image', 'product.price', 'brands.name as brand_name'])
+                ->Join('product', 'categories.id', '=', 'product.id_cate')
                 ->join('brands', 'brands.id', '=', 'product.id_brand')
                 ->get()->toArray();
-        
-    //     $activities = ActivityFeed::query()
-    // ->with(['parentable' => function (MorphTo $morphTo) {
-    //     $morphTo->morphWith([
-    //         Event::class => ['calendar'],
-    //         Photo::class => ['tags'],
-    //         Post::class => ['author'],
-    //     ]);
-    // }])->get();
-        // $data_cate = Categories::with('products')->get()->toArray();
-        // dd($data);
         $data_cate = [];
         foreach ($data as $key => $value) {
             if (array_key_exists($value['id'], $data_cate)) {
                 array_push($data_cate[$value['id']]['product'],  [
                     "name" => $value['product_name'],
-                    "brand_name" => $value['brand_name']
+                    "brand_name" => $value['brand_name'],
+                    "image" => json_decode($value['image'])
                 ]);
-            } else {
+            } 
+            else {
                 $data_cate[$value['id']]['name_cate'] = $value['cate_name'];
                 $data_cate[$value['id']]['product'] = [
                     [
                         "name" => $value['product_name'],
-                        "brand_name" => $value['brand_name']
+                        "brand_name" => $value['brand_name'],
+                        "image" => json_decode($value['image'])
+
                     ]
                 ];
 
             }
         }
         // dd($data_cate);
-        // $data_brand = Brands::get();
-        // $data_product = Product::get();
         return view('Home', compact('data_cate'));
     }
 

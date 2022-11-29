@@ -64,7 +64,7 @@
         </div>
         <div class="col-md-1 d-flex justify-content-end pr-2">
             <div class="p-0">
-                <button type="button" class="btn btn-primary btn-sm add " data-toggle="modal" data-target="#BrandAddModal">
+                <button type="button" class="btn btn-primary btn-sm add " data-toggle="modal" data-target="#ProductAddModal">
                     <span class=" fa fa-plus"></span>
                 </button>
             </div>
