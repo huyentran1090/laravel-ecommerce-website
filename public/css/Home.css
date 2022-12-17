@@ -4,7 +4,7 @@ body {
     background-attachment: scroll;   
 }
 #container {
-    background-color:#a6faf7f6;
+    background-color: rgb(125, 235, 247);
     font-weight: bold;
 }
 #navbar {

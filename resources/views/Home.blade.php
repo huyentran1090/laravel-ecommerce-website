@@ -13,6 +13,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link href="{{ asset('css/home.css') }}" rel="stylesheet">
+    @yield('css')
 </head>
 
 <body>
@@ -22,7 +23,7 @@
                 <div class="container">
                     <nav class="navbar navbar-expand-lg navbar-dark ">
                         <div>
-                            <a class="navbar-brand" href="/webtrading.php">
+                            <a class="navbar-brand" href="{{ route('home') }}">
                                 <img src="https://cdn.iconscout.com/icon/premium/png-256-thumb/market-1802176-1530897.png"
                                     alt="shop" height="40px">
                                 Shop Bán Hàng
@@ -35,14 +36,16 @@
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNavDropdown">
                             <ul class="navbar-nav ml-auto py-5 py-md-2">
-                                @foreach ($data_cate as $categories)
+                                @foreach ($data as $categories)
                                     <li class="nav-item active">
-                                        <a class="nav-link mx-3" href="#">{{ $categories['name_cate'] }}</a>
+                                        <a class="nav-link mx-3" href="#">{{ $categories['name'] }}</a>
                                     </li>
                                 @endforeach
                             </ul>
                             <div id="show-table-cart">
-                                <a href="#" id="add-product-cart" class='btn btn-info btn-lg'>
+                                {{-- route('name of route') --}}
+                                <a href="{{ route('shopping.cart') }}" id="add-product-cart"
+                                    class='btn btn-info btn-lg showCart'>
                                     <span class='glyphicon glyphicon-shopping-cart'>
                                     </span>
                                 </a>
@@ -65,102 +68,11 @@
             </div>
         </div>
         <div id="block-content" class="container">
-            <div class="row">
-                <div class="col-lg-9">
-                    <div class="row ">
-                        <div class="offset-3 col-12 offset-md-0 col-md-6 p-0 py-sm-2  position-relative">
-                        </div>
-                        <div class="offset-2 col-12 offset-md-0 col-md-6 pb-sm-5">
-                            <div class="row">
-                                <ul class="nav nav-tabs border-0 justify-content-center" role="tablist">
-                                    <li class="nav-item mr-2">
-                                        <a class="nav-link active" href="#allmovie" role="tab" data-toggle="tab">Sản
-                                            phẩm mới</a>
-                                    </li>
-                                    <li class="nav-item mr-2">
-                                        <a class="nav-link" href="#comingsoon" role="tab" data-toggle="tab">Sản phẩm
-                                            hot</a>
-                                    </li>
-                                    <li class="nav-item mr-2">
-                                        <a class="nav-link" href="#newmovie" role="tab" data-toggle="tab">Đang
-                                            sale</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row position-absolute" style="top:0px">
-                        <div class="tab-content ">
-                            <div role="tabpanel" class="tab-pane active" id="allmovie">
-                                <div class="row">
-                                    @foreach ($data_cate as $categories)
-                                        <h1>{{ $categories['name_cate'] }}</h1>
-                                        <div class="row w-100">
-                                            @foreach ($categories['product'] as $item)
-                                                <div class='offset-3 col-6 mb-5 offset-md-0 col-md-3 '>
-                                                    <div id='card' class='border-0'>
-                                                        <div class='card border-0 position-relative'>
-                                                            <a href="#">
-                                                                <img src="{{ url('storage/images/' . $item['image'][0]) }}"
-                                                                    class='card-img-top rounded'
-                                                                    alt='{{ $item['name'] }}'>
-                                                            </a>
-                                                            <div class='d-flex justify-content-center'>
-                                                                <div id='point' class='position-absolute'>8.9
-                                                                </div>
-                                                            </div>
-                                                            <div class='card-body p-0'>
-                                                                <div id='rating'>
-                                                                    <span class='fa fa-star checked'></span>
-                                                                    <span class='fa fa-star checked'></span>
-                                                                    <span class='fa fa-star checked'></span>
-                                                                    <span class='fa fa-star'></span>
-                                                                    <span class='fa fa-star'></span>
-                                                                </div>
-                                                                <h5 class='card-title py-2'>{{ $item['name'] }}</h5>
-                                                                <div class='col-md-12 p-0'>
-                                                                    <span class'fa fa-tag'></span>
-                                                                    <a href='#'>{{ $item['brand_name'] }}</a>
-                                                                </div>
-                                                                <form action='#' method='post'>
-                                                                    <div class='row justify-content-center'>
-                                                                        <input class='minus is-form' type='button'
-                                                                            value='-' onclick='minus()'>
-                                                                        <input aria-label='quantity' id='box-number'
-                                                                            class='input-qty' max='10'
-                                                                            min='0' name=''
-                                                                            type='number' value='1'>
-                                                                        <input class='plus is-form' type='button'
-                                                                            value='+' onclick='plus()'>
-                                                                        <div id='block-cart-icon'>
-                                                                            <a id='add-product-cart'
-                                                                                class='btn btn-info btn-lg'
-                                                                                href="#">
-                                                                                <span name='quantity'
-                                                                                    class='glyphicon glyphicon-shopping-cart'>
-                                                                                </span>
-                                                                            </a>
-                                                                        </div>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    @endforeach
 
-                                </div>
-                            </div>
-                            <div role="tabpanel" class="tab-pane" id="comingsoon">
-                            </div>
-                            <div role="tabpanel" class="tab-pane fade" id="newmovie">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="row">
+                @yield('content')
             </div>
+
         </div>
     </div>
     <footer>
@@ -206,6 +118,9 @@
             document.getElementById("box-number").value = parseInt(x) + 1;
         }
     </script>
+
+    <script src="{{ asset('js/home.js') }}" defer></script>
+    @yield('javascript')
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
     </script>

@@ -16,36 +16,44 @@ class HomeController extends Controller
      */
     public function index()
     {
-
-        $data = Categories::select(['categories.id', 'categories.name as cate_name', 'product.name as product_name', 'product.image as image', 'product.price', 'brands.name as brand_name'])
-                ->Join('product', 'categories.id', '=', 'product.id_cate')
-                ->join('brands', 'brands.id', '=', 'product.id_brand')
-                ->get()->toArray();
-        $data_cate = [];
-        foreach ($data as $key => $value) {
-            if (array_key_exists($value['id'], $data_cate)) {
-                array_push($data_cate[$value['id']]['product'],  [
-                    "name" => $value['product_name'],
-                    "brand_name" => $value['brand_name'],
-                    "image" => json_decode($value['image'])
-                ]);
-            } 
-            else {
-                $data_cate[$value['id']]['name_cate'] = $value['cate_name'];
-                $data_cate[$value['id']]['product'] = [
-                    [
-                        "name" => $value['product_name'],
-                        "brand_name" => $value['brand_name'],
-                        "image" => json_decode($value['image'])
-
-                    ]
-                ];
-
-            }
-        }
-        // dd($data_cate);
-        return view('Home', compact('data_cate'));
+        $data = Categories::select(['categories.*'])
+                ->with('products')->get();
+        // $data = Categories::select(['categories.id', 'categories.name as cate_name', 'product.name as product_name', 'product.image as image', 'product.price', 'brands.name as brand_name'])
+        //         ->Join('product', 'categories.id', '=', 'product.id_cate')
+        //         ->join('brands', 'brands.id', '=', 'product.id_brand')
+        //         ->get();
+        // $data_cate = [];
+        // foreach ($data as $key => $value) {
+        //     if (array_key_exists($value['id'], $data_cate)) {
+        //         array_push($data_cate[$value['id']]['product'],  [
+        //             "name" => $value['product_name'],
+        //             "brand_name" => $value['brand_name'],
+        //             "image" => json_decode($value['image'])
+        //         ]);
+        //     } 
+        //     else {
+        //         $data_cate[$value['id']]['name_cate'] = $value['cate_name'];
+        //         $data_cate[$value['id']]['product'] = [
+        //             [
+        //                 "name" => $value['product_name'],
+        //                 "brand_name" => $value['brand_name'],
+        //                 "image" => json_decode($value['image'])
+        //             ]
+        //         ];
+        //     }
+        // }
+        // dd($data);
+        return view('include.body', compact('data'));
     }
+
+    public function shopping()
+    {
+        $data = Categories::select(['categories.*'])
+                ->with('products')->get();
+        return view('shopping-cart', compact('data'));
+    }
+    
+
 
     /**
      * Show the form for creating a new resource.
