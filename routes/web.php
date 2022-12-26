@@ -34,8 +34,14 @@ use Illuminate\Support\Facades\Route;
 // });
 // http://127.0.0.1:8080/admin
 
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->name('home');
+// Route::get('/shopping-cart',function() {
+//     return view('shopping-cart');
+// });
+Route::get('/shopping-cart', [HomeController::class, 'shopping'])->name('shopping.cart');
+Route::get('/shopping-cart/update', [HomeController::class, 'shopping'])->name('shopping.update');
 
+// 
 
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -47,3 +53,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('products', ProductsController::class);
 });
 
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+require __DIR__.'/auth.php';

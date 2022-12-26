@@ -48,9 +48,9 @@ class CategoriesController extends Controller
         $validator = Validator::make($request->all(), [
             'namecategory' => 'required|regex:/^([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+)$/',
             'filename' => 'required|array',
-            'filename.*' => 'bail|mimes:jpg,png,jpeg'
+            'filename.*' => 'bail|mimes:jpg,png,jpeg|max:1024'
         ], [
-            'filename.*.mimes' => 'The filename must be a file of type: jpg.',
+            'filename.*.mimes' => 'The image must be a file of type: jpg.',
         ]);
         if ($validator->fails()) {
             return response()->json(["validator" => $validator->errors(), "code" => 422]);
@@ -102,22 +102,14 @@ class CategoriesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'namecategory' => 'required|regex:/^([a-zA-Z0-9ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+)$/',
-            // 'filename1' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'filename1' => 'required|array',
+            'filename1.*' => 'bail|mimes:jpg,png,jpeg|max:1024'
+        ], [
+            'filename1.*.mimes' => 'The filename must be a file of type: jpg.',
         ]);
 
         if ($validator->fails()) {
             return response()->json(["validator" => $validator->errors(), "code" => 422]);
-        }
-        $imageRules = array(
-            'filename1' => 'required|array',
-            'filename1.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048'
-        );
-        foreach ($request->file('filename1') as $image) {
-            $image = array('filename1' => $image);
-            $imageValidator = Validator::make($image, $imageRules);
-            if ($imageValidator->fails()) {
-                $messages = $imageValidator->errors();
-            }
         }
         $categories = Categories::find($id);
         if (empty($categories)) {

@@ -5,12 +5,11 @@ $(document).ready(function () {
 
     $('.edit').on('click', function () {
         id = $(this).attr('data-id');
-        $('#ProductEditModal').modal('show');
+        $('#CategoryEditModal').modal('show');
         var tr = $(this).closest('tr');
         var data = tr.children("td").map(function () {
             return $(this).text();
         }).get();
-
         $('#name1').val(data[1]);
         $('#preview-edit').empty();
         old_images = $(this).data('edit-images');
@@ -62,7 +61,9 @@ $(document).ready(function () {
                 }
                 else {
                     $.each(response.validator, function (index, value) {
-                        console.log(value, index);
+                        if (index.includes("filename1")) {
+                            $('.filename1').addClass('alert alert-danger').text(value);
+                        }
                         $('.' + index).addClass('alert alert-danger').text(value);
                     });
                 }
@@ -95,6 +96,7 @@ $(document).ready(function () {
         console.log("da vao day");
         $("#add-category-form")[0].reset();
         $('#preview').empty();
+        $('.errorValidate').empty();
     });
 
     // when click button submit in modal add
@@ -117,6 +119,9 @@ $(document).ready(function () {
                 }
                 else {
                     $.each(response.validator, function (index, value) {
+                        if (index.includes("filename")) {
+                            $('.filename').addClass('alert alert-danger').text(value);
+                        }
                         $('.' + index).addClass('alert alert-danger').text(value);
                     });
                 }
@@ -125,7 +130,7 @@ $(document).ready(function () {
     });
 
     // JS display gallery images
-    $(document).on("click", ".open-modal-gallary-image", function () {
+    $(document).on("click", ".open-modal-gallery-image", function () {
         $('#gallery').empty();
         let images = $(this).data('images');
         images.forEach(element => {
@@ -136,10 +141,5 @@ $(document).ready(function () {
         });
     });
 });
-
-// // JS ADD MODAL
-// $(document).ready(function () {
-   
-// });
 
 

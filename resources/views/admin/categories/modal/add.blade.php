@@ -23,6 +23,7 @@
                     <div class="mb-3">
                         <label class="form-label"> Ảnh </label>
                         <input type="file" name="filename[]" id="filename" class="form-control" multiple>
+                        <div class="filename errorValidate"></div>
                     </div>
                     <div id="preview" class="preview d-flex flex-wrap justify-content-start px-auto">
                     </div>

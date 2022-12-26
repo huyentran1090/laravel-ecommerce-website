@@ -8,6 +8,7 @@ use App\Models\Categories;
 use App\Models\Product;
 // use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -18,12 +19,36 @@ class ProductsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data_products = Product::get();
         $categories = Categories::all();
         $brands = Brands::all();
-        return view('admin.products.index', compact('data_products','categories','brands'));
+        $data_products = Product::select('*');
+        if ($request->name) {
+            $nameSearch = $request->name;
+            $data_products->where(function ($query) use ($nameSearch) {
+                $query->where('name', 'LIKE', '%' . $nameSearch . '%')
+                        ->orWhere('price', '=', $nameSearch);
+                return $query;
+            });
+        }
+        if ($request->id_brand) {
+            $brandSearch = $request->id_brand;
+            $data_products->where(function ($query) use ($brandSearch) {
+                $query->where('id_brand', '=',$brandSearch);
+                return $query;
+            });
+        }
+        if ($request->id_cate) {
+            $cateSearch = $request->id_cate;
+            $data_products->where(function ($query) use ($cateSearch) {
+                $query->where('id_cate', '=',$cateSearch);
+                return $query;
+            });
+        }
+        
+        $data_products = $data_products->paginate(5);
+        return view('admin.products.index', compact('data_products', 'categories', 'brands'));
     }
 
     /**
@@ -33,8 +58,6 @@ class ProductsController extends Controller
      */
     public function create()
     {
-     
-
     }
 
     /**
@@ -45,36 +68,32 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
         $validator = Validator::make($request->all(), [
             'nameproducts' => 'required|regex:/^([A-Za-z0-9]+)(\s[A-Za-z0-9]+)*$/',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            
+            'product-image' => 'required|array',
+            'product-image.*' => 'bail|mimes:jpg,png,jpeg'
+        ], [
+            'product-image.*.mimes' => 'The filename must be a file of type: jpg.',
         ]);
         if ($validator->fails()) {
             return response()->json(["validator" => $validator->errors(), "code" => 422]);
         }
+        if ($request->hasFile('product-image')) {
+            $data = [];
+            foreach ($request->file('product-image') as $image) {
+                $filename = rand(0, 999) . time();
+                $image->move('storage/images/', $filename);
+                $data[] =  $filename;
+            }
+        }
         $products = new Product;
-        $products->name = $request-> input('nameproducts');
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $extention = $file ->getClientOriginalExtension();
-            $filename = time().'.'.$extention;
-            $file->move('storage/images/',$filename);
-            $products->image = $filename;
-            
-        } 
-        
-        // $path = $request->file('image')->store('public/images');
-        // $path_image = substr($path,7);
-        // $products->image = $path_image;
+        $products->name = $request->input('nameproducts');
+        $products->image = json_encode($data);
         $products->price = $request->input('price');
         $products->id_cate = $request->input('id_cate');
         $products->id_brand = $request->input('id_brand');
-        
         $products->save();
-        
-        return response()->json(["status" => "succcess", "code" => 200]);
+        return response()->json(["status" => "success", "code" => 200]);
     }
 
     /**
@@ -110,7 +129,6 @@ class ProductsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $products = Product::find($id);
         $validator = Validator::make($request->all(), [
             'nameproducts' => 'required|regex:/^([A-Za-z0-9]+)(\s[A-Za-z0-9]+)*$/',
             // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -125,25 +143,44 @@ class ProductsController extends Controller
         if ($validator->fails()) {
             return response()->json(["validator" => $validator->errors(), "code" => 422]);
         }
-      
-       
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $extention = $file ->getClientOriginalExtension();
-            $filename = time().'.'.$extention;
-            $file->move('storage/images/',$filename);
-        } 
-       
-        $dataPrepairUpdate = ['name'=> $request->input('nameproducts'),
-                                'price' => $request->input('price'),
-                                'id_cate' => $request->input('id_cate'),
-                                'id_brand' => $request->input('id_brand')
-                            ];
-        if (isset($filename)) {
-            $dataPrepairUpdate['image'] = $filename;
+        $products = Product::find($id);
+        if (empty($products)) {
+            return response()->json(["status" => "fail to update", "code" => 200]);
         }
-        $products = Product::where('id', $id)->update($dataPrepairUpdate);
-        return response()->json(["status" => "succcess", "code" => 200]);
+        $images = $request->file('product-image1');
+        if ($images != null) {
+            $old_image_array = explode(",", $request->old_images);
+            foreach ($old_image_array as $old_image) {
+                $image_path =   public_path('storage/images/' . $old_image);
+                if (File::exists($image_path)) {
+                    File::delete($image_path);
+                }
+            }
+            $data_image = [];
+            foreach ($request->file('product-image1') as $image) {
+                $filename = rand(0, 999) . time();
+                $image->move('storage/images/', $filename);
+                $data_image[] =  $filename;
+            }
+            $dataPrepairUpdate = [
+                'name' => $request->nameproducts,
+                'image' => json_encode($data_image),
+                'price' => $request->price,
+                'id_cate' => $request->id_cate,
+                'id_brand' => $request->id_brand
+            ];
+            $products = Product::where('id', $id)->update($dataPrepairUpdate);
+            return response()->json(["status" => "success", "code" => 200]);
+        } else {
+            $dataPrepairUpdate = [
+                'name' => $request->nameproducts,
+                'price' => $request->price,
+                'id_cate' => $request->id_cate,
+                'id_brand' => $request->id_brand
+            ];
+            $products = Product::where('id', $id)->update($dataPrepairUpdate);
+            return response()->json(["status" => "success", "code" => 200]);
+        }
     }
 
     /**
@@ -154,7 +191,15 @@ class ProductsController extends Controller
      */
     public function destroy($id)
     {
-        $deleted = Product::where('id', $id)->delete();
+        $deleted = Product::find($id);
+        $image_array = json_decode($deleted->image);
+        foreach ($image_array as $image_delete) {
+            $image_path = public_path('storage/images/' . $image_delete);
+            if (File::exists($image_path)) {
+                File::delete($image_path);
+            }
+        }
+        $deleted->delete();
         return redirect()->route('admin.products.index');
     }
 }
