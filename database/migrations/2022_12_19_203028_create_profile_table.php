@@ -22,7 +22,7 @@ class CreateProfileTable extends Migration
             $table->string('phone_number', 20)->nullable();
             $table->string('address');
             $table->string('social_network');
-            $table->unsignedInteger('id_user');
+            $table->unsignedBigInteger('id_user');
             $table->foreign('id_user')
             ->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
