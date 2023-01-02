@@ -1,11 +1,12 @@
 
 $(document).ready(function () {
+    $('.datepicker').datepicker({
+        language: "es",
+        autoclose: true,
+        format: "dd/mm/yyyy"
+    });
+
     $('.edit').on('click', function () {
-        $(function() {
-            $('#datetimepicker1').datetimepicker({
-              language: 'pt-BR'
-            });
-          });
         id = $(this).attr('data-id');
         console.log(id);
     });

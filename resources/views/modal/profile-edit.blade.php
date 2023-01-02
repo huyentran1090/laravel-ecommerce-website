@@ -26,9 +26,11 @@
                         <div id="preview-profile-edit" class="d-flex flex-wrap justify-content-start px-auto">
                         </div>
                         <div class="form-group">
-                            <div id="datetimepicker1" class="input-append date">
-                                <input data-format="dd/MM/yyyy hh:mm:ss" type="text"></input>
-                                <span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
+                            <div class="datepicker date input-group">
+                                <input type="text" placeholder="Choose Date" class="form-control" id="fecha1">
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
