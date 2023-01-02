@@ -27,7 +27,7 @@
                         </div>
                         <div class="form-group">
                             <div class="datepicker date input-group">
-                                <input type="text" placeholder="Choose Date" class="form-control" id="fecha1">
+                                <input type="text" placeholder="Choose Date" name="date-of-birth" class="form-control" id="fecha1">
                                 <div class="input-group-append">
                                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                                 </div>
