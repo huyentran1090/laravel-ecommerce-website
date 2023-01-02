@@ -7,6 +7,7 @@ use App\Http\Controllers\BrandsController as ControllersBrandsController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
 use App\Models\Categories;
 use Illuminate\Support\Facades\Route;
 
@@ -38,16 +39,18 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // Route::get('/shopping-cart',function() {
 //     return view('shopping-cart');
 // });
-Route::get('/shopping-cart', [HomeController::class, 'shopping'])->name('shopping.cart');
+Route::get('/shopping-cart', [HomeController::class, 'shopping'])->middleware(['auth', 'check.role'])->name('shopping.cart');
 Route::get('/shopping-cart/update', [HomeController::class, 'shopping'])->name('shopping.update');
+Route::resource('/profile', ProfileController::class)->middleware(['auth']);
 
 // 
 
 
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
     Route::get('/', function () {
         return view('admin.default');
-    });
+    })->name('admin.index');
+    Route::get('categories/index', [AdminCategoriesController::class, 'index'])->name('categories.index');
     Route::resource('categories', AdminCategoriesController::class);
     Route::resource('brands', BrandsController::class);
     Route::resource('products', ProductsController::class);
@@ -57,4 +60,4 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
